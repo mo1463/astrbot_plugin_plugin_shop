@@ -1,0 +1,22 @@
+name: astrbot_plugin_plugin_shop
+display_name: 插件商店助手
+short_desc: 让机器人自己搜索、安装、启停插件市场的插件
+desc: >-
+  让 AstrBot 的机器人自己逛插件市场：搜索、安装、启用、停用、卸载插件。全部能力以 LLM
+  工具的形式暴露，用户直接说需求即可，安装和变更操作默认需要用户确认。
+help: 直接说需求即可，例如「找一个天气插件装上」。管理员也可以发送「插件市场」查看说明。
+version: 1.0.0
+author: mo1463
+repo: https://github.com/mo1463/astrbot_plugin_plugin_shop
+support_platforms:
+  - aiocqhttp
+  - telegram
+  - qq_official
+astrbot_version: ">=4.0.0"
+tags:
+  - 插件市场
+  - 插件管理
+  - 工具
+  - llm
+  - 管理员
+social_link: https://github.com/mo1463
