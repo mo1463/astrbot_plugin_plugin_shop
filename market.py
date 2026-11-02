@@ -6,9 +6,15 @@ from typing import Any
 from astrbot.api import logger
 
 try:
-    from astrbot.core.utils.astrbot_path import get_astrbot_data_path
+    from astrbot.core.utils.astrbot_path import (
+        get_astrbot_data_path,
+        get_astrbot_plugin_data_path,
+    )
 except Exception:
     get_astrbot_data_path = None
+    get_astrbot_plugin_data_path = None
+
+PLUGIN_NAME = "astrbot_plugin_plugin_shop"
 
 MARKET_URLS = (
     "https://api.soulter.top/astrbot/plugins",
@@ -22,17 +28,40 @@ class MarketDataError(Exception):
 
 
 def _data_dir() -> Path:
+    """返回 AstrBot 的 data 目录。"""
     if get_astrbot_data_path is not None:
         try:
             return Path(get_astrbot_data_path())
         except Exception:
             pass
-    return Path(__file__).resolve().parents[3] / "data"
+    # 回退：插件位于 <data>/plugins/<plugin>/，向上两级即 <data>
+    candidate = Path(__file__).resolve().parents[2]
+    if candidate.name == "data":
+        return candidate
+    return Path.cwd() / "data"
+
+
+def _plugin_data_dir() -> Path:
+    """返回插件持久化数据目录 <data>/plugin_data/<plugin>/。"""
+    base: Path | None = None
+    if get_astrbot_plugin_data_path is not None:
+        try:
+            base = Path(get_astrbot_plugin_data_path())
+        except Exception:
+            base = None
+    if base is None:
+        base = _data_dir() / "plugin_data"
+    path = base / PLUGIN_NAME
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+    except Exception as exc:
+        logger.debug(f"[plugin_shop] 创建插件数据目录失败 {path}: {exc}")
+    return path
 
 
 def _own_cache_path() -> Path:
-    path = Path(__file__).resolve().parent / "market_cache.json"
-    return path
+    return _plugin_data_dir() / "market_cache.json"
+
 
 
 def _normalize_entries(raw: Any) -> dict[str, dict]:
