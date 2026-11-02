@@ -11,7 +11,7 @@ from .tools import InstalledListTool, ManageTool, MarketInstallTool, MarketSearc
     "astrbot_plugin_plugin_shop",
     "mo1463",
     "让机器人搜索插件市场、安装和启停插件（管理员限定，默认需要用户确认）",
-    "1.0.0",
+    "1.0.1",
 )
 class PluginShop(Star):
     def __init__(self, context: Context, config: dict | None = None) -> None:
